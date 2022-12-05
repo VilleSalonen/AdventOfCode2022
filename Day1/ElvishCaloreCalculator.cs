@@ -56,10 +56,6 @@ public class ElvishCaloreCalculator
 
     public static int Calculate(string inputString)
     {
-        Parser<int> elfLoadIdentifier =
-            from calories in Calories.Many()
-            select calories.Sum();
-
         Parser<int> input =
             from elfLoads in ElfLoad
                 .DelimitedBy(Parse.Chars("\r\t,"))
