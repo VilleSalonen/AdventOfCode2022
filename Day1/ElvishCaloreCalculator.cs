@@ -64,6 +64,23 @@ public class ElvishCaloreCalculatorTests
 """
 100
 """)]
+    [TestCase(24000,
+"""
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+""")]
     public void Calculate(int expected, string input)
     {
         var result = ElvishCaloreCalculator.Calculate(input);
