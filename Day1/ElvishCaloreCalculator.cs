@@ -43,18 +43,27 @@ In case the Elves get hungry and need extra snacks, they need to know which Elf 
 Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
 */
 
-
-
-public class ElvishCaloreCalculator {
-    public static int Calculate(string inputString) {
-        Parser<int> caloriesIdentifier =
+public class ElvishCaloreCalculator
+{
+    public static Parser<int> Calories =
             from number in Parse.Number
             from eol in Parse.LineTerminator
             select int.Parse(number);
 
-        Parser<int> input =
-            from calories in caloriesIdentifier.Many()
+    public static Parser<int> ElfLoad =
+        from calories in Calories.Many()
             select calories.Sum();
+
+    public static int Calculate(string inputString)
+    {
+        Parser<int> elfLoadIdentifier =
+            from calories in Calories.Many()
+            select calories.Sum();
+
+        Parser<int> input =
+            from elfLoads in ElfLoad
+                .DelimitedBy(Parse.Chars("\r\t,"))
+            select elfLoads.Max();
 
         return input.Parse(inputString);
     }
@@ -62,6 +71,33 @@ public class ElvishCaloreCalculator {
 
 public class ElvishCaloreCalculatorTests
 {
+    [TestCase(0, "0")]
+    [TestCase(1, "1")]
+    [TestCase(100, "100")]
+    public void CaloriesTests(int expected, string input)
+    {
+        ElvishCaloreCalculator
+            .Calories.Parse(input)
+            .Should().Be(expected);
+    }
+
+    [TestCase(100,
+"""
+100
+""")]
+    [TestCase(600,
+"""
+100
+200
+300
+""")]
+    public void ElfLoadTests(int expected, string input)
+    {
+        ElvishCaloreCalculator
+            .ElfLoad.Parse(input)
+            .Should().Be(expected);
+    }
+
     [TestCase(0, """
 0
 """)]
