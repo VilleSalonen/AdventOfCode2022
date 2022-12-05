@@ -46,20 +46,21 @@ Find the Elf carrying the most Calories. How many total Calories is that Elf car
 public class ElvishCaloreCalculator
 {
     public static Parser<int> Calories =
-            from number in Parse.Number
-            from eol in Parse.LineTerminator
-            select int.Parse(number);
+        from number in Parse.Number
+        from eol in Parse.LineTerminator
+        select int.Parse(number);
 
     public static Parser<int> ElfLoad =
         from calories in Calories.Many()
-            select calories.Sum();
+        select calories.Sum();
 
     public static int Calculate(string inputString)
     {
         Parser<int> input =
-            from elfLoads in ElfLoad
-                .DelimitedBy(Parse.Chars("\r\t,"))
-            select elfLoads.Max();
+            from elfLoad1 in ElfLoad
+            from emptyLine in Parse.LineTerminator
+            from elfLoad2 in ElfLoad
+            select elfLoad1 < elfLoad2 ? elfLoad2 : elfLoad1;
 
         return input.Parse(inputString);
     }
@@ -106,6 +107,16 @@ public class ElvishCaloreCalculatorTests
 100
 200
 300
+""")]
+    [TestCase(1500,
+"""
+100
+200
+300
+
+400
+500
+600
 """)]
     /*[TestCase(24000,
 """
