@@ -43,6 +43,12 @@ public readonly record struct Rucksack(string RucksackContent)
     public string FirstCompartment => RucksackContent.Substring(0, Items / 2);
     public string SecondCompartment => RucksackContent.Substring(Items / 2);
     public IEnumerable<char> CommonItems => FirstCompartment.Intersect(SecondCompartment);
+    public IEnumerable<int> CommonItemsPriority =>
+        CommonItems
+            .Select(c => (int)c)
+            .Select(cInt => 'A' <= cInt && cInt <= 'Z'
+                ? cInt - (int)'A' + 27
+                : cInt - (int)'a' + 1);
 }
 
 public static class RucksackParser
@@ -393,4 +399,15 @@ vZgdLvZLZQLRQZQQdMZLdQvVpRhNNPfJDbcBbbhVNJNNhf
         RucksackParser
             .Rucksack.Parse(input)
             .CommonItems.Should().BeEquivalentTo(expected);
+
+    [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", new[] { 16 })]
+    [TestCase("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", new[] { 38 })]
+    [TestCase("PmmdzqPrVvPwwTWBwg", new[] { 42 })]
+    [TestCase("wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", new[] { 22 })]
+    [TestCase("ttgJtRGJQctTZtZT", new[] { 20 })]
+    [TestCase("CrZsJsPPZsGzwwsLwLmpwMDw", new[] { 19 })]
+    public void CommonItemsPriorityTests(string input, int[] expected) =>
+        RucksackParser
+            .Rucksack.Parse(input)
+            .CommonItemsPriority.Should().BeEquivalentTo(expected);
 }
