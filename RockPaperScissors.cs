@@ -36,9 +36,36 @@ What would your total score be if everything goes exactly according to your stra
 
 public enum RPS
 {
-    Rock,
-    Paper,
-    Scissors
+    Rock = 1,
+    Paper = 2,
+    Scissors = 3
+}
+
+public enum RPSResult
+{
+    Win = 6,
+    Draw = 3,
+    Loss = 0
+}
+
+public readonly record struct Game(RPS OpponentPlay, RPS MyPlay)
+{
+    public RPSResult Result => (OpponentPlay, MyPlay) switch
+    {
+        { OpponentPlay: RPS.Rock, MyPlay: RPS.Rock } => RPSResult.Draw,
+        { OpponentPlay: RPS.Rock, MyPlay: RPS.Paper } => RPSResult.Win,
+        { OpponentPlay: RPS.Rock, MyPlay: RPS.Scissors } => RPSResult.Loss,
+
+        { OpponentPlay: RPS.Paper, MyPlay: RPS.Rock } => RPSResult.Loss,
+        { OpponentPlay: RPS.Paper, MyPlay: RPS.Paper } => RPSResult.Draw,
+        { OpponentPlay: RPS.Paper, MyPlay: RPS.Scissors } => RPSResult.Win,
+
+        { OpponentPlay: RPS.Scissors, MyPlay: RPS.Rock } => RPSResult.Win,
+        { OpponentPlay: RPS.Scissors, MyPlay: RPS.Paper } => RPSResult.Loss,
+        { OpponentPlay: RPS.Scissors, MyPlay: RPS.Scissors } => RPSResult.Draw,
+    };
+
+    public int NumericResult => (int)Result + (int)MyPlay;
 }
 
 public static class RockPaperScissors
@@ -52,6 +79,12 @@ public static class RockPaperScissors
     public static Parser<RPS> MyPaper = from _ in Parse.Char('Y') select RPS.Paper;
     public static Parser<RPS> MyScissors = from _ in Parse.Char('Z') select RPS.Scissors;
     public static Parser<RPS> MyPlay = MyRock.Or(MyPaper).Or(MyScissors);
+
+    public static Parser<int> Game =
+        from opponentPlay in OpponentPlay
+        from _ in Parse.WhiteSpace
+        from myPlay in MyPlay
+        select new Game(opponentPlay, myPlay).NumericResult;
 }
 
 public class RockPaperScissorsTests
@@ -70,5 +103,15 @@ public class RockPaperScissorsTests
     public void MyPlayTests(string input)
     {
         RockPaperScissors.MyPlay.Parse(input);
+    }
+
+    [TestCase("A Y", 8)]
+    [TestCase("B X", 1)]
+    [TestCase("C Z", 6)]
+    public void GameTests(string input, int expected)
+    {
+        RockPaperScissors
+            .Game.Parse(input)
+            .Should().Be(expected);
     }
 }
