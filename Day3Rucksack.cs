@@ -37,15 +37,18 @@ In the above example, the priority of the item type that appears in both compart
 Find the item type that appears in both compartments of each rucksack. What is the sum of the priorities of those item types?
 */
 
+public readonly record struct Rucksack(string RucksackContent)
+{
+    public int Items => RucksackContent.Length;
+    public string FirstCompartment => RucksackContent.Substring(0, Items / 2);
+    public string SecondCompartment => RucksackContent.Substring(Items / 2);
+}
+
 public static class RucksackParser
 {
-    public static Parser<string> FirstCompartment =
-        from wholeRucksack in Parse.Letter.Many().Text()
-        select wholeRucksack.Substring(0, wholeRucksack.Length / 2);
-
-    public static Parser<string> SecondCompartment =
-        from wholeRucksack in Parse.Letter.Many().Text()
-        select wholeRucksack.Substring(wholeRucksack.Length / 2);
+    public static Parser<Rucksack> Rucksack =
+        from rucksackContent in Parse.Letter.Many().Text()
+        select new Rucksack(rucksackContent);
 }
 
 public class RucksackParserTests
@@ -366,12 +369,12 @@ vZgdLvZLZQLRQZQQdMZLdQvVpRhNNPfJDbcBbbhVNJNNhf
     [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "vJrwpWtwJgWr")]
     public void FirstCompartmentTests(string input, string expected) =>
         RucksackParser
-            .FirstCompartment.Parse(input)
-            .Should().Be(expected);
+            .Rucksack.Parse(input)
+            .FirstCompartment.Should().Be(expected);
 
     [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "hcsFMMfFFhFp")]
     public void SecondCompartmentTests(string input, string expected) =>
         RucksackParser
-            .SecondCompartment.Parse(input)
-            .Should().Be(expected);
+            .Rucksack.Parse(input)
+            .SecondCompartment.Should().Be(expected);
 }
