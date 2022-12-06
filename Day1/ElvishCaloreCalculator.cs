@@ -61,12 +61,18 @@ public class ElvishCaloreCalculator
     public static Parser<int> Puzzle1 =
         from elfLoads in ElfLoad.DelimitedBy(GroupSeparator)
         select elfLoads.Max();
+
+    public static Parser<int> Puzzle2 =
+        from elfLoads in ElfLoad.DelimitedBy(GroupSeparator)
+        select elfLoads
+            .OrderDescending()
+            .Take(3)
+            .Sum();
 }
 
 public class ElvishCaloreCalculatorTests
 {
-    #region Example
-    public const string Puzzle1Example =
+    public const string PuzzleExample =
 """
 1000
 2000
@@ -83,9 +89,7 @@ public class ElvishCaloreCalculatorTests
 
 10000
 """;
-    #endregion
 
-    #region Puzzle input
     public const string PuzzleInput =
 """
 9609
@@ -2339,7 +2343,6 @@ public class ElvishCaloreCalculatorTests
 2781
 11806
 """;
-    #endregion
 
     [TestCase(0, "0")]
     [TestCase(1, "1")]
@@ -2389,13 +2392,41 @@ public class ElvishCaloreCalculatorTests
 500
 600
 """)]
-    [TestCase(24000, Puzzle1Example)]
-    #region Puzzle input
+    [TestCase(24000, PuzzleExample)]
     [TestCase(71300, PuzzleInput)]
-    #endregion
     public void Puzzle1(int expected, string inputString)
     {
         var result = ElvishCaloreCalculator.Puzzle1.Parse(inputString);
+        result.Should().Be(expected);
+    }
+
+    [TestCase(0, """
+0
+""")]
+    [TestCase(100,
+"""
+100
+""")]
+    [TestCase(600,
+"""
+100
+200
+300
+""")]
+    [TestCase(2100,
+"""
+100
+200
+300
+
+400
+500
+600
+""")]
+    [TestCase(45000, PuzzleExample)]
+    public void Puzzle2(int expected, string inputString)
+    {
+        var result = ElvishCaloreCalculator.Puzzle2.Parse(inputString);
         result.Should().Be(expected);
     }
 }
