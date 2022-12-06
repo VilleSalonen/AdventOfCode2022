@@ -59,7 +59,7 @@ Your puzzle answer was 209691.
 Both parts of this puzzle are complete! They provide two gold stars: **
 */
 
-public class ElvishCaloreCalculator
+public static class ElvishCaloreCalculator
 {
     public static Parser<IEnumerable<char>> CaloriesSeparator =
         Parse.String(Environment.NewLine);
