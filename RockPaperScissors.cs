@@ -103,27 +103,20 @@ C Z
     [TestCase("A")]
     [TestCase("B")]
     [TestCase("C")]
-    public void OpponentPlayTests(string input)
-    {
-        RockPaperScissors.OpponentPlay.Parse(input);
-    }
+    public void OpponentPlayTests(string input) => RockPaperScissors.OpponentPlay.Parse(input);
 
     [TestCase("X")]
     [TestCase("Y")]
     [TestCase("Z")]
-    public void MyPlayTests(string input)
-    {
-        RockPaperScissors.MyPlay.Parse(input);
-    }
+    public void MyPlayTests(string input) => RockPaperScissors.MyPlay.Parse(input);
 
     [TestCase("A Y", 8)]
     [TestCase("B X", 1)]
     [TestCase("C Z", 6)]
-    public void GameTests(string input, int expected)
-    {
-        RockPaperScissors
-            .Game.Parse(input)
-            .Should().Be(expected);
+    public void GameTests(string input, int expected) => RockPaperScissors
+        .Game.Parse(input)
+        .Should().Be(expected);
+
     [TestCase(PuzzleExample, 15)]
     public void StrategyGuideTests(string input, int expected) => RockPaperScissors
         .StrategyGuide.Parse(input)
