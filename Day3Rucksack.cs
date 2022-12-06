@@ -57,6 +57,11 @@ public static class RucksackParser
     public static Parser<Rucksack> Rucksack =
         from rucksackContent in Parse.Letter.Many().Text()
         select new Rucksack(rucksackContent);
+
+    public static Parser<IEnumerable<int>> AllRucksacks =
+        from rucksacks in Rucksack.DelimitedBy(Parse.LineTerminator)
+        select rucksacks
+            .Select(r => r.CommonItemsPriority);
 }
 
 public class RucksackParserTests
@@ -411,4 +416,9 @@ vZgdLvZLZQLRQZQQdMZLdQvVpRhNNPfJDbcBbbhVNJNNhf
         RucksackParser
             .Rucksack.Parse(input)
             .CommonItemsPriority.Should().Be(expected);
+
+    [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", 12)]
+    public void AllRucksacksTests(string input, int expected) =>
+        RucksackParser
+            .AllRucksacks.Parse(input);
 }
