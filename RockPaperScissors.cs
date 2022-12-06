@@ -34,17 +34,24 @@ In this example, if you were to follow the strategy guide, you would get a total
 What would your total score be if everything goes exactly according to your strategy guide?
 */
 
+public enum RPS
+{
+    Rock,
+    Paper,
+    Scissors
+}
+
 public static class RockPaperScissors
 {
-    public static Parser<char> OpponentRock = Parse.Char('A');
-    public static Parser<char> OpponentPaper = Parse.Char('B');
-    public static Parser<char> OpponentScissors = Parse.Char('C');
-    public static Parser<char> OpponentPlay = OpponentRock.Or(OpponentPaper).Or(OpponentScissors);
+    public static Parser<RPS> OpponentRock = from _ in Parse.Char('A') select RPS.Rock;
+    public static Parser<RPS> OpponentPaper = from _ in Parse.Char('B') select RPS.Paper;
+    public static Parser<RPS> OpponentScissors = from _ in Parse.Char('C') select RPS.Scissors;
+    public static Parser<RPS> OpponentPlay = OpponentRock.Or(OpponentPaper).Or(OpponentScissors);
 
-    public static Parser<char> MyRock = Parse.Char('X');
-    public static Parser<char> MyPaper = Parse.Char('Y');
-    public static Parser<char> MyScissors = Parse.Char('Z');
-    public static Parser<char> MyPlay = MyRock.Or(MyPaper).Or(MyScissors);
+    public static Parser<RPS> MyRock = from _ in Parse.Char('X') select RPS.Rock;
+    public static Parser<RPS> MyPaper = from _ in Parse.Char('Y') select RPS.Paper;
+    public static Parser<RPS> MyScissors = from _ in Parse.Char('Z') select RPS.Scissors;
+    public static Parser<RPS> MyPlay = MyRock.Or(MyPaper).Or(MyScissors);
 }
 
 public class RockPaperScissorsTests
