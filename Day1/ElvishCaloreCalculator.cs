@@ -58,14 +58,9 @@ public class ElvishCaloreCalculator
         from calories in Calories.DelimitedBy(CaloriesSeparator)
         select calories.Sum();
 
-    public static int Calculate(string inputString)
-    {
-        Parser<int> input =
-            from elfLoads in ElfLoad.DelimitedBy(GroupSeparator)
-            select elfLoads.Max();
-
-        return input.Parse(inputString);
-    }
+    public static Parser<int> Puzzle1 =
+        from elfLoads in ElfLoad.DelimitedBy(GroupSeparator)
+        select elfLoads.Max();
 }
 
 public class ElvishCaloreCalculatorTests
@@ -2388,9 +2383,9 @@ public class ElvishCaloreCalculatorTests
 2781
 11806
 """)]
-    public void Calculate(int expected, string inputString)
+    public void Puzzle1(int expected, string inputString)
     {
-        var result = ElvishCaloreCalculator.Calculate(inputString);
+        var result = ElvishCaloreCalculator.Puzzle1.Parse(inputString);
         result.Should().Be(expected);
     }
 }
