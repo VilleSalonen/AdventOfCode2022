@@ -2662,6 +2662,7 @@ A Y
         .Should().Be(expected);
 
     [TestCase(PuzzleExample, 12)]
+    [TestCase(PuzzleInput, 11258)]
     public void UltraTopSecretStrategyGuideTests(string input, int expected) => RockPaperScissors
         .UltraTopSecretStrategyGuide.Parse(input)
         .Should().Be(expected);
