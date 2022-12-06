@@ -368,20 +368,29 @@ vZgdLvZLZQLRQZQQdMZLdQvVpRhNNPfJDbcBbbhVNJNNhf
 """;
 
     [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "vJrwpWtwJgWr")]
+    [TestCase("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "jqHRNqRjqzjGDLGL")]
+    [TestCase("PmmdzqPrVvPwwTWBwg", "PmmdzqPrV")]
     public void FirstCompartmentTests(string input, string expected) =>
         RucksackParser
             .Rucksack.Parse(input)
             .FirstCompartment.Should().Be(expected);
 
     [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "hcsFMMfFFhFp")]
+    [TestCase("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "rsFMfFZSrLrFZsSL")]
+    [TestCase("PmmdzqPrVvPwwTWBwg", "vPwwTWBwg")]
     public void SecondCompartmentTests(string input, string expected) =>
         RucksackParser
             .Rucksack.Parse(input)
             .SecondCompartment.Should().Be(expected);
 
-    [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "p")]
-    public void CommonItemTests(string input, string expected) =>
+    [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", new[] { 'p' })]
+    [TestCase("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", new[] { 'L' })]
+    [TestCase("PmmdzqPrVvPwwTWBwg", new[] { 'P' })]
+    [TestCase("wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", new[] { 'v' })]
+    [TestCase("ttgJtRGJQctTZtZT", new[] { 't' })]
+    [TestCase("CrZsJsPPZsGzwwsLwLmpwMDw", new[] { 's' })]
+    public void CommonItemTests(string input, char[] expected) =>
         RucksackParser
             .Rucksack.Parse(input)
-            .CommonItems.Should().BeEquivalentTo(new[] { 'p' });
+            .CommonItems.Should().BeEquivalentTo(expected);
 }
