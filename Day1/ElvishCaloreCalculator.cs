@@ -2424,6 +2424,7 @@ public class ElvishCaloreCalculatorTests
 600
 """)]
     [TestCase(45000, PuzzleExample)]
+    [TestCase(209691, PuzzleInput)]
     public void Puzzle2(int expected, string inputString)
     {
         var result = ElvishCaloreCalculator.Puzzle2.Parse(inputString);
