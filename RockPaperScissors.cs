@@ -85,10 +85,21 @@ public static class RockPaperScissors
         from _ in Parse.WhiteSpace
         from myPlay in MyPlay
         select new Game(opponentPlay, myPlay).NumericResult;
+
+    public static Parser<int> StrategyGuide =
+        from games in Game.DelimitedBy(Parse.LineTerminator)
+        select games.Sum();
 }
 
 public class RockPaperScissorsTests
 {
+    public const string PuzzleExample =
+"""
+A Y
+B X
+C Z
+""";
+
     [TestCase("A")]
     [TestCase("B")]
     [TestCase("C")]
@@ -113,5 +124,8 @@ public class RockPaperScissorsTests
         RockPaperScissors
             .Game.Parse(input)
             .Should().Be(expected);
-    }
+    [TestCase(PuzzleExample, 15)]
+    public void StrategyGuideTests(string input, int expected) => RockPaperScissors
+        .StrategyGuide.Parse(input)
+        .Should().Be(expected);
 }
