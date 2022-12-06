@@ -42,6 +42,7 @@ public readonly record struct Rucksack(string RucksackContent)
     public int Items => RucksackContent.Length;
     public string FirstCompartment => RucksackContent.Substring(0, Items / 2);
     public string SecondCompartment => RucksackContent.Substring(Items / 2);
+    public IEnumerable<char> CommonItems => FirstCompartment.Intersect(SecondCompartment);
 }
 
 public static class RucksackParser
@@ -377,4 +378,10 @@ vZgdLvZLZQLRQZQQdMZLdQvVpRhNNPfJDbcBbbhVNJNNhf
         RucksackParser
             .Rucksack.Parse(input)
             .SecondCompartment.Should().Be(expected);
+
+    [TestCase("vJrwpWtwJgWrhcsFMMfFFhFp", "p")]
+    public void CommonItemTests(string input, string expected) =>
+        RucksackParser
+            .Rucksack.Parse(input)
+            .CommonItems.Should().BeEquivalentTo(new[] { 'p' });
 }
