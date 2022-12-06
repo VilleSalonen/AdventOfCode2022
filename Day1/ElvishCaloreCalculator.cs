@@ -57,10 +57,12 @@ public class ElvishCaloreCalculator
     public static int Calculate(string inputString)
     {
         Parser<int> input =
-            from elfLoad1 in ElfLoad
-            from emptyLine in Parse.LineTerminator
-            from elfLoad2 in ElfLoad
-            select elfLoad1 < elfLoad2 ? elfLoad2 : elfLoad1;
+            from elfLoads in ElfLoad
+                .Many()
+                .DelimitedBy(Parse.String(Environment.NewLine))
+            select elfLoads
+                .SelectMany(i => i)
+                .Max();
 
         return input.Parse(inputString);
     }
@@ -118,7 +120,7 @@ public class ElvishCaloreCalculatorTests
 500
 600
 """)]
-    /*[TestCase(24000,
+    [TestCase(24000,
 """
 1000
 2000
@@ -134,7 +136,7 @@ public class ElvishCaloreCalculatorTests
 9000
 
 10000
-""")]*/
+""")]
     public void Calculate(int expected, string inputString)
     {
         var result = ElvishCaloreCalculator.Calculate(inputString);
