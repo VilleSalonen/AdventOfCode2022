@@ -68,6 +68,26 @@ public readonly record struct Game(RPS OpponentPlay, RPS MyPlay)
     public int NumericResult => (int)Result + (int)MyPlay;
 }
 
+public readonly record struct GamePart2(RPS OpponentPlay, RPSResult Result)
+{
+    public RPS MyPlay => (OpponentPlay, Result) switch
+    {
+        { OpponentPlay: RPS.Rock, Result: RPSResult.Win } => RPS.Paper,
+        { OpponentPlay: RPS.Rock, Result: RPSResult.Draw } => RPS.Rock,
+        { OpponentPlay: RPS.Rock, Result: RPSResult.Loss } => RPS.Scissors,
+
+        { OpponentPlay: RPS.Paper, Result: RPSResult.Win } => RPS.Scissors,
+        { OpponentPlay: RPS.Paper, Result: RPSResult.Draw } => RPS.Paper,
+        { OpponentPlay: RPS.Paper, Result: RPSResult.Loss } => RPS.Rock,
+
+        { OpponentPlay: RPS.Scissors, Result: RPSResult.Win } => RPS.Rock,
+        { OpponentPlay: RPS.Scissors, Result: RPSResult.Draw } => RPS.Scissors,
+        { OpponentPlay: RPS.Scissors, Result: RPSResult.Loss } => RPS.Paper,
+    };
+
+    public int NumericResult => (int)Result + (int)MyPlay;
+}
+
 public static class RockPaperScissors
 {
     public static Parser<RPS> OpponentRock = from _ in Parse.Char('A') select RPS.Rock;
@@ -80,6 +100,11 @@ public static class RockPaperScissors
     public static Parser<RPS> MyScissors = from _ in Parse.Char('Z') select RPS.Scissors;
     public static Parser<RPS> MyPlay = MyRock.Or(MyPaper).Or(MyScissors);
 
+    public static Parser<RPSResult> MyLoss = from _ in Parse.Char('X') select RPSResult.Loss;
+    public static Parser<RPSResult> MyDraw = from _ in Parse.Char('Y') select RPSResult.Draw;
+    public static Parser<RPSResult> MyWin = from _ in Parse.Char('Z') select RPSResult.Win;
+    public static Parser<RPSResult> MyExpectedResult = MyWin.Or(MyDraw).Or(MyLoss);
+
     public static Parser<int> Game =
         from opponentPlay in OpponentPlay
         from _ in Parse.WhiteSpace
@@ -88,6 +113,16 @@ public static class RockPaperScissors
 
     public static Parser<int> StrategyGuide =
         from games in Game.DelimitedBy(Parse.LineTerminator)
+        select games.Sum();
+
+    public static Parser<int> GamePart2 =
+        from opponentPlay in OpponentPlay
+        from _ in Parse.WhiteSpace
+        from myExpectedResult in MyExpectedResult
+        select new GamePart2(opponentPlay, myExpectedResult).NumericResult;
+
+    public static Parser<int> UltraTopSecretStrategyGuide =
+        from games in GamePart2.DelimitedBy(Parse.LineTerminator)
         select games.Sum();
 }
 
@@ -2624,5 +2659,10 @@ A Y
     [TestCase(PuzzleInput, 14531)]
     public void StrategyGuideTests(string input, int expected) => RockPaperScissors
         .StrategyGuide.Parse(input)
+        .Should().Be(expected);
+
+    [TestCase(PuzzleExample, 12)]
+    public void UltraTopSecretStrategyGuideTests(string input, int expected) => RockPaperScissors
+        .UltraTopSecretStrategyGuide.Parse(input)
         .Should().Be(expected);
 }
