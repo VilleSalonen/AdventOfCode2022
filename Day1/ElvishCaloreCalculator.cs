@@ -65,55 +65,8 @@ public class ElvishCaloreCalculator
 
 public class ElvishCaloreCalculatorTests
 {
-    [TestCase(0, "0")]
-    [TestCase(1, "1")]
-    [TestCase(100, "100")]
-    public void CaloriesTests(int expected, string input)
-    {
-        ElvishCaloreCalculator
-            .Calories.Parse(input)
-            .Should().Be(expected);
-    }
-
-    [TestCase(100,
-"""100""")]
-    [TestCase(600,
-"""
-100
-200
-300
-""")]
-    public void ElfLoadTests(int expected, string input)
-    {
-        ElvishCaloreCalculator
-            .ElfLoad.Parse(input)
-            .Should().Be(expected);
-    }
-
-    [TestCase(0, """
-0
-""")]
-    [TestCase(100,
-"""
-100
-""")]
-    [TestCase(600,
-"""
-100
-200
-300
-""")]
-    [TestCase(1500,
-"""
-100
-200
-300
-
-400
-500
-600
-""")]
-    [TestCase(24000,
+    #region Example
+    public const string Puzzle1Example =
 """
 1000
 2000
@@ -129,8 +82,11 @@ public class ElvishCaloreCalculatorTests
 9000
 
 10000
-""")]
-    [TestCase(71300,
+""";
+    #endregion
+
+    #region Puzzle input
+    public const string PuzzleInput =
 """
 9609
 7601
@@ -2382,7 +2338,61 @@ public class ElvishCaloreCalculatorTests
 2763
 2781
 11806
+""";
+    #endregion
+
+    [TestCase(0, "0")]
+    [TestCase(1, "1")]
+    [TestCase(100, "100")]
+    public void CaloriesTests(int expected, string input)
+    {
+        ElvishCaloreCalculator
+            .Calories.Parse(input)
+            .Should().Be(expected);
+    }
+
+    [TestCase(100,
+"""100""")]
+    [TestCase(600,
+"""
+100
+200
+300
 """)]
+    public void ElfLoadTests(int expected, string input)
+    {
+        ElvishCaloreCalculator
+            .ElfLoad.Parse(input)
+            .Should().Be(expected);
+    }
+
+    [TestCase(0, """
+0
+""")]
+    [TestCase(100,
+"""
+100
+""")]
+    [TestCase(600,
+"""
+100
+200
+300
+""")]
+    [TestCase(1500,
+"""
+100
+200
+300
+
+400
+500
+600
+""")]
+    [TestCase(24000, Puzzle1Example)]
+    #region Puzzle input
+    [TestCase(71300, PuzzleInput)]
+    #endregion
     public void Puzzle1(int expected, string inputString)
     {
         var result = ElvishCaloreCalculator.Puzzle1.Parse(inputString);
